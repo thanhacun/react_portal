@@ -1,0 +1,14 @@
+.map_container {
+  padding: 10px;
+  border: solid 1px green;
+}
+
+.map_element {
+
+}
+
+.infowindow {
+  color: green;
+  font-size: 18px;
+  font-weight: bold;
+}
