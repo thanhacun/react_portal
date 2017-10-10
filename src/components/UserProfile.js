@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { push } from 'react-router-redux';
-import { facebookLogin, socialConnect, logout } from '../actions/userActions';
+import { socialConnect, socialUnlink, logout } from '../actions/userActions';
 
 import SocialButton from './SocialButton';
 import { Col, Row, Well } from 'react-bootstrap';
@@ -50,20 +50,21 @@ class UserProfile extends Component {
                   <strong>email</strong>: {this.props.facebook.email} <br/>
                   <strong>name</strong>: {this.props.facebook.name} <br/>
 
-                  <a href="#" className="btn btn-primary">Unlink</a>
+                  <SocialButton provider="facebook" appId="1565459906908844"
+                    onLoginSuccess={(response) => this.props.socialUnlink(response)}
+                    //onLoginFailure
+                    className="btn btn-danger"><span className="fa fa-facebook"></span> Unlink
+                  </SocialButton>
                 </p>
                 : <SocialButton provider="facebook" appId="1565459906908844"
-                  onLoginSuccess={(response) => this.props.facebookLogin(response)}
+                  onLoginSuccess={(response, local_email) => this.props.socialConnect(response, this.props.local.email)}
                   // onLoginFailure={handleSocialLoginFailer}
-                  className="btn btn-primary"><span className="fa fa-facebook"></span> Facebook
+                  className="btn btn-primary"><span className="fa fa-facebook"></span> Connect
                 </SocialButton> }
             </Well>
           </Col>
         </Row>
-        <p>Test connect</p>
-        {this.props.facebook.token ?
-          <a onClick={() => this.props.socialConnect(this.props.facebook.token)} className="btn btn-primary">Connect Facebook</a>
-          : "" }
+
       </div>
     );
   }
@@ -74,8 +75,8 @@ const mapStateToProps = store => store.user;
 const mapDispatchToProps = dispatch => {
   return {
     goTo: (path) => dispatch(push(path)),
-    socialConnect: (token) => dispatch(socialConnect(token)),
-    facebookLogin: (loginUser) => dispatch(facebookLogin(loginUser)),
+    socialConnect: (socialResponse, local_email) => dispatch(socialConnect(socialResponse, local_email)),
+    socialUnlink: (socialResponse) => dispatch(socialUnlink(socialResponse)),
     logout: () => dispatch(logout())
   }
 }

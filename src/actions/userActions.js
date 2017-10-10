@@ -1,13 +1,6 @@
 import axios from 'axios';
 import Auth from '../utils/Auth';
 
-export function localLogin(email, password){
-  return {
-    type: 'LOGIN',
-    payload: axios.post('/api/users/login', { email, password })
-  };
-}
-
 export function localSignup(email, password){
   return {
     type: 'LOCAL_SIGNUP',
@@ -15,41 +8,17 @@ export function localSignup(email, password){
   }
 }
 
-export function facebookAuth(){
+export function localLogin(email, password){
   return {
-    type: 'FACEBOOK_AUTH',
-    payload: axios({
-      url: 'http://192.168.0.64:3036/api/users/auth/facebook',
-      method: 'get',
-      headers: {'X-Requested-With': 'XMLHttpRequest'}
-  })
-}}
-
-export function socialConnect(token){
-  return {
-    type: 'SOCIAL_CONNECT',
-    payload: axios.get('/api/users/social/connect/facebook?access_token=' + token)
-  }
+    type: 'LOGIN',
+    payload: axios.post('/api/users/login', { email, password })
+  };
 }
 
-export function localConnect(){
+export function localConnect(email, password, social_email, social_provider){
   return {
     type: 'LOCAL_CONN',
-    payload: axios.get('/api/users/info')
-  }
-}
-
-export function facebookAuthToken(){
-  return {
-    type: 'FACEBOOK_AUTH_TOKEN',
-    payload: axios.get('/api/users/auth/facebook/token?access_token=5bc7c1406800165cbbef783015ef85b7')
-  }
-}
-
-export function facebookLogin(loginUser){
-  return {
-    type: 'SOCIAL_CLIENT_LOGIN',
-    payload: loginUser
+    payload: axios.post('/api/users/info', { email, password, social_email, social_provider})
   }
 }
 
@@ -75,6 +44,31 @@ export function socialLogin(socialResponse){
       }
     })
   };
+}
+
+export function socialConnect(socialResponse, local_email){
+  return {
+    type: 'SOCIAL_CONNECT',
+    payload: axios.get('/api/users/social/connect', {
+      headers: {
+        access_token: socialResponse._token.accessToken,
+        strategy: `${socialResponse._provider}-token`,
+        local_email
+      },
+    })
+  }
+}
+
+export function socialUnlink(socialResponse){
+  return {
+    type: 'SOCIAL_UNLINK',
+    payload: axios.get('/api/users/social/unlink', {
+      headers: {
+        access_token: socialResponse._token.accessToken,
+        strategy: `${socialResponse._provider}-token`
+      }
+    })
+  }
 }
 
 // TODO: still cannot handle error here: error message is in then phase

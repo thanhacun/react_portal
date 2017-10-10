@@ -16,17 +16,23 @@ export default function(state=userInitialState, action){
       return { ...state, busy: true }
 
     case 'GET_USER_INFO_FULFILLED':
-      //handle case of local vs socials: facebook, google, ...
-      //payload data consists only one account type
+      const providers = ['local', 'facebook', 'google', 'twitter'];
+      //userData consiste some 'dirty' data, need a way to cleanup and return all providers data
       const userData = {...action.payload.data};
-      const userAccType = ['local', 'facebook', 'google', 'twitter'].filter(accountType => accountType in userData)[0];
+      const providersData = providers.reduce((finalResult, provider) => {
+        if (provider in userData) finalResult[provider] = userData[provider];
+        return finalResult;
+      }, {});
+
+      const userAccType = providers.filter(provider => provider in userData)[0];
 
       return {
         ...state,
         busy: false,
-        ...action.payload.data,
-        [userAccType]: {...action.payload.data[userAccType], _id: action.payload.data._id},
-        userEmail: action.payload.data[userAccType].email
+        ...userData,
+        ...providersData,
+        //TODO: better way to get user email because accounts are linked
+        userEmail: userData[userAccType].email
       }
 
     case 'GET_USER_INFO_REJECTED':
@@ -96,8 +102,12 @@ export default function(state=userInitialState, action){
         [provider]: { ...action.payload.data.token },
       }
 
-    case 'SOCIAL_CONNECT':
+    case 'SOCIAL_CONNECT_FULFILLED':
       return {...state}
+
+    case 'SOCIAL_UNLINK_FULFILLED':
+      Auth.deauthenticateUser();
+      return { ...state };
 
     case 'LOGOUT':
       Auth.deauthenticateUser();
