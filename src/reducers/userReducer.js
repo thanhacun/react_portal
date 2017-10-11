@@ -1,4 +1,5 @@
 import Auth from '../utils/Auth';
+import { combineReducers } from 'redux'
 
 const userInitialState = {
   userEmail: null,
@@ -9,39 +10,44 @@ const userInitialState = {
   google: {},
   twitter: {}
 };
+const providers = ['local', 'facebook', 'google', 'twitter'];
 
-export default function(state=userInitialState, action){
+const cleanData = (rawData) => {
+  // return clean user data (without _id and __v)
+  return providers.reduce((accResult, provider) => {
+    if (provider in rawData) {
+      accResult[provider] = rawData[provider];
+    } else {
+      accResult[provider] = {};
+    }
+    return accResult;
+  }, {});
+}
+
+const user = function(state=userInitialState, action){
   switch (action.type) {
+    //TODO: all pending action return the same object
     case 'GET_USER_INFO_PENDING':
-      return { ...state, busy: true }
+      return { ...state, busy: true };
 
     case 'GET_USER_INFO_FULFILLED':
-      const providers = ['local', 'facebook', 'google', 'twitter'];
-      //userData consiste some 'dirty' data, need a way to cleanup and return all providers data
-      const userData = {...action.payload.data};
-      const providersData = providers.reduce((finalResult, provider) => {
-        if (provider in userData) finalResult[provider] = userData[provider];
-        return finalResult;
-      }, {});
-
-      const userAccType = providers.filter(provider => provider in userData)[0];
+      const userData = cleanData(action.payload.data);
+      const userAccType = providers.filter(provider => provider in action.payload.data)[0];
 
       return {
         ...state,
         busy: false,
         ...userData,
-        ...providersData,
         //TODO: better way to get user email because accounts are linked
         userEmail: userData[userAccType].email
-      }
+      };
 
     case 'GET_USER_INFO_REJECTED':
-      //Auth.deauthenticateUser();
+      Auth.deauthenticateUser();
       return {
         ...state,
         busy: false,
         error: action.payload.message,
-        errMessage: action.payload.message
       }
 
     case 'LOCAL_SIGNUP_PENDING':
@@ -51,12 +57,10 @@ export default function(state=userInitialState, action){
       return {
         ...state,
         local: {...action.payload.data.local, _id: action.payload.data._id},
-        errMessage: action.payload.data.errMessage || '',
-        userEmail: action.payload.data.local.email
       }
 
     case 'LOCAL_SIGNUP_REJECTED':
-      return { ...state, busy: false, error: action.payload.message }
+      return { ...state, busy: false, error: action.payload.response.data.error }
 
     case 'LOGIN_PENDING':
       return { ...state, busy: true }
@@ -67,8 +71,7 @@ export default function(state=userInitialState, action){
       return {
         ...state,
         busy: false,
-        errMessage: action.payload.data.errMessage,
-        local: { ...action.payload.data.user.local },
+        ...cleanData(action.payload.data.user),
         userEmail: action.payload.data.user.local.email,
         redirectTo: '/profile'
       }
@@ -76,7 +79,7 @@ export default function(state=userInitialState, action){
     case 'LOGIN_REJECTED':
       // delete token in localStorage
       Auth.deauthenticateUser();
-      return { ...state, busy: true, error: action.payload.message};
+      return { ...state, busy: true, error: action.payload.response.data.error};
 
     case 'SOCIAL_LOGIN_PENDING':
       return { ...state, busy: true};
@@ -103,11 +106,17 @@ export default function(state=userInitialState, action){
       }
 
     case 'SOCIAL_CONNECT_FULFILLED':
-      return {...state}
+      return {
+        ...state,
+        ...cleanData(action.payload.data.user)
+      }
 
     case 'SOCIAL_UNLINK_FULFILLED':
-      Auth.deauthenticateUser();
-      return { ...state };
+      //Auth.deauthenticateUser();
+      return {
+        ...state,
+        ...cleanData(action.payload.data.user)
+       };
 
     case 'LOGOUT':
       Auth.deauthenticateUser();
@@ -120,3 +129,5 @@ export default function(state=userInitialState, action){
       return state;
   }
 };
+
+export default user;
