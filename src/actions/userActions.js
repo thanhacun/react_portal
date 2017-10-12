@@ -35,6 +35,7 @@ export function socialSignup(socialResponse){
 }
 
 export function socialLogin(socialResponse){
+  console.log(socialResponse);
   return {
     type: 'SOCIAL_LOGIN',
     payload: axios.get('/api/users/social/login', {

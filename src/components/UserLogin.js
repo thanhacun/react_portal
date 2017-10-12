@@ -1,44 +1,44 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-import Auth from '../utils/Auth';
+//import Auth from '../utils/Auth';
 
 import SocialButton from './SocialButton';
 
-import { Jumbotron, Form, FormGroup, ControlLabel, FormControl, Button } from 'react-bootstrap';
+import { Jumbotron, Form, FormGroup, ControlLabel, FormControl, Button, Alert } from 'react-bootstrap';
 import { localLogin, getUserInfo, socialLogin } from '../actions/userActions';
 
 //TODO: understand clearly dummy and smart components
-//TODO: sharing common state between sliced reducers / routes
 
 class UserLogin extends Component {
-  constructor(props){
-    super(props);
-    this.state ={int_email: '', int_password: ''};
+  constructor(){
+    super();
+    this.state ={int_email: '', int_password: '', redirectTo: null};
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.loginFailure  = this.loginFailure.bind(this);
   }
 
   componentDidMount(){
-    if (Auth.isUserAuthenticated()) {
-      this.props.getUserInfo();
-    }
+    this.props.getUserInfo();
   }
 
   componentDidUpdate(){
     //redirect to profile if loggedin
-    if (this.props.userEmail && this.props.redirectTo) {
-      this.props.goTo(this.props.redirectTo);
+    if (this.props.userEmail) {
+      this.props.goTo('/profile');
     }
   }
 
+  loginFailure(response){
+    console.log(response);
+  }
+
   handleChange(e, type){
-    //ES6 dynamic object key
     this.setState({[type]: e.target.value});
   }
 
   handleSubmit(e){
-    //alert(this.state.int_email + this.state.int_password);
     e.preventDefault();
     this.props.localLogin(this.state.int_email, this.state.int_password);
     this.setState({int_email: '', int_password: ''});
@@ -48,19 +48,20 @@ class UserLogin extends Component {
     return (
       <div className="container">
         <Jumbotron className="text-center">
-          <h1><span className="fa fa-sign-in"></span> Login or Register with:</h1>
-          {/* TODO: move appId to config file */}
-          <SocialButton provider="facebook" appId="1565459906908844"
+          <h2><span className="fa fa-sign-in"></span> Login or Register with:</h2>
+          <SocialButton provider="facebook"
             onLoginSuccess={(response) => this.props.socialLogin(response)}
             // onLoginFailure={handleSocialLoginFailer}
             className="btn btn-primary"><span className="fa fa-facebook"></span> Facebook
           </SocialButton>
-
-          {/* <a onClick={this.props.facebookAuthToken} className="btn btn-primary"><span className="fa fa-facebook"></span> Facebook</a> */}
-          <a href="/api/users/auth/facebook" className="btn btn-info"><span className="fa fa-twitter"></span> Twitter</a>
-          <a href="http://192.168.0.64:3036/api/users/auth/facebook" className="btn btn-danger"><span className="fa fa-google-plus"></span> Google</a>
+          <SocialButton provider="google"
+            onLoginSuccess={(response) => this.props.socialLogin(response)}
+            onLoginFailure={(response) => this.loginFailure(response)}
+            className="btn btn-danger" ><span className="fa fa-google-plus"> Google</span>
+          </SocialButton>
 
         </Jumbotron>
+
         <h2> Local Login </h2>
         <Form onSubmit={this.handleSubmit}>
           <FormGroup>
@@ -74,22 +75,25 @@ class UserLogin extends Component {
           <Button type="submit" bsStyle="warning">Login</Button>
         </Form>
         <hr />
-        <p>Need an account? <a onClick={() => this.props.goTo("/signup")}>Signup</a></p>
+        {/* Show warning */}
+        {(this.props.error) ?
+          <Alert bsStyle="danger">
+            <h4>Wanring!</h4>
+            <p>{this.props.error}</p>
+          </Alert> : ""}
+        <p>Need an account? <a href="" onClick={() => this.props.goTo("/signup")}>Signup</a></p>
       </div>
     );
   }
 }
 
-const mapStateToProps = store => {
-  return store.user
-}
+const mapStateToProps = store => store.user;
 
 const mapDispatchToProps = dispatch => {
   return {
     localLogin: (email, password) => dispatch(localLogin(email, password)),
-    //facebookLogin: (loginUser) => dispatch(facebookLogin(loginUser)),
     goTo: (path) => dispatch(push(path)),
-    getUserInfo: () => dispatch(getUserInfo()),
+    getUserInfo,
     socialLogin: (socialResponse) => dispatch(socialLogin(socialResponse))
   };
 }

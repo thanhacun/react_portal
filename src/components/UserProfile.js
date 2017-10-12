@@ -10,8 +10,8 @@ import { Col, Row, Well } from 'react-bootstrap';
 class UserProfile extends Component {
   componentDidUpdate(){
     //redirect to home if logout
-    if (!this.props.userEmail && this.props.redirectTo) {
-      this.props.goTo(this.props.redirectTo);
+    if (!this.props.userEmail) {
+      this.props.goTo('/');
     }
   }
   render(){
@@ -33,7 +33,7 @@ class UserProfile extends Component {
                   <strong>email</strong>: {this.props.local.email} <br/>
                   <strong>password</strong>: {this.props.local.password}
 
-                  <a href="#" className="btn btn-default">Unlink</a>
+                  <a href="" className="btn btn-default" disabled>Unlink</a>
                 </p> :
                 <a onClick={() => this.props.goTo('/connect/local')} className="btn btn-default">Connect Local</a>}
             </Well>
@@ -50,13 +50,13 @@ class UserProfile extends Component {
                   <strong>email</strong>: {this.props.facebook.email} <br/>
                   <strong>name</strong>: {this.props.facebook.name} <br/>
 
-                  <SocialButton provider="facebook" appId="1565459906908844"
+                  <SocialButton provider="facebook"
                     onLoginSuccess={(response) => this.props.socialUnlink(response)}
                     //onLoginFailure
                     className="btn btn-danger"><span className="fa fa-facebook"></span> Unlink
                   </SocialButton>
                 </p>
-                : <SocialButton provider="facebook" appId="1565459906908844"
+                : <SocialButton provider="facebook"
                   onLoginSuccess={(response, local_email) => this.props.socialConnect(response, this.props.local.email)}
                   // onLoginFailure={handleSocialLoginFailer}
                   className="btn btn-primary"><span className="fa fa-facebook"></span> Connect

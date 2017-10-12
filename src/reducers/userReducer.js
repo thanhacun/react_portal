@@ -1,5 +1,4 @@
 import Auth from '../utils/Auth';
-import { combineReducers } from 'redux'
 
 const userInitialState = {
   userEmail: null,
@@ -73,7 +72,6 @@ const user = function(state=userInitialState, action){
         busy: false,
         ...cleanData(action.payload.data.user),
         userEmail: action.payload.data.user.local.email,
-        redirectTo: '/profile'
       }
 
     case 'LOGIN_REJECTED':
