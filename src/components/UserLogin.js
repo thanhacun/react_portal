@@ -51,7 +51,7 @@ class UserLogin extends Component {
           <h2><span className="fa fa-sign-in"></span> Login or Register with:</h2>
           <SocialButton provider="facebook"
             onLoginSuccess={(response) => this.props.socialLogin(response)}
-            // onLoginFailure={handleSocialLoginFailer}
+            onLoginFailure={(response) => this.loginFailure(response)}
             className="btn btn-primary"><span className="fa fa-facebook"></span> Facebook
           </SocialButton>
           <SocialButton provider="google"

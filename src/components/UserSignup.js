@@ -47,11 +47,17 @@ class UserSignup extends Component {
             <Button type="submit" bsStyle="primary">Submit</Button>
           </Form>
         <br />
-        <h1>Social signin</h1>
-        <SocialButton provider="facebook" appId="1565459906908844"
+        <h1>Social Signup</h1>
+        <SocialButton provider="facebook"
           onLoginSuccess={(socialResponse) => this.props.socialSignup(socialResponse)}
           // onLoginFailure={handleSocialLoginFailer}
           className="btn btn-primary"><span className="fa fa-facebook"></span> Facebook
+        </SocialButton>
+        
+        <SocialButton provider="google"
+          onLoginSuccess={(socialResponse) => this.props.socialSignup(socialResponse)}
+          // onLoginFailure={handleSocialLoginFailer}
+          className="btn btn-danger"><span className="fa fa-google-plus"></span> Google
         </SocialButton>
         {/* {this.props.facebook.token ? <Button onClick={this.props.facebookAPILogin(this.props.facebook.token)}></Button> : <span>Waiting for facebook token ...</span>} */}
       </div>

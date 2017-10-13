@@ -34,11 +34,5 @@
     "babel-eslint": "^8.0.0",
     "eslint-plugin-react": "^7.3.0"
   },
-  "proxy": {
-    "/api": {
-      "target": "http://192.168.0.64:3036",
-      "changeOrigin": true,
-      "ws": true
-    }
-  }
+  "proxy": "http://192.168.0.64:3036"
 }

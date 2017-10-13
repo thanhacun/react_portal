@@ -95,7 +95,7 @@ const user = function(state=userInitialState, action){
     case 'SOCIAL_SIGNUP_FULFILLED':
       //TODO: handle other providers
       const provider = ['facebook', 'google', 'twitter']
-        .filter(socialProvider => socialProvider in action.payload.data.token)[0]
+        .filter(socialProvider => socialProvider in action.payload.data.user)[0]
       return {
         ...state,
         busy: false,
