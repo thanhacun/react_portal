@@ -61,10 +61,35 @@ class UserProfile extends Component {
                   // onLoginFailure={handleSocialLoginFailer}
                   className="btn btn-primary"><span className="fa fa-facebook"></span> Connect
                 </SocialButton> }
+
+            </Well>
+
+          </Col>
+        </Row>
+        <Row>
+          <Col sm={6}>
+            <Well>
+              {(this.props.google.token)
+                ? <p>
+                  <strong>id</strong>: {this.props.google.id} <br/>
+                  <strong>token</strong>: {this.props.google.token} <br/>
+                  <strong>email</strong>: {this.props.google.email} <br/>
+                  <strong>name</strong>: {this.props.google.name} <br/>
+
+                  <SocialButton provider="google"
+                    onLoginSuccess={(response) => this.props.socialUnlink(response)}
+                    //onLoginFailure
+                    className="btn btn-danger"><span className="fa fa-google-plus"></span> Unlink
+                  </SocialButton>
+                </p>
+                : <SocialButton provider="google"
+                  onLoginSuccess={(response, local_email) => this.props.socialConnect(response, this.props.local.email)}
+                  // onLoginFailure={handleSocialLoginFailer}
+                  className="btn btn-danger"><span className="fa fa-google-plus"></span> Connect
+                </SocialButton> }
             </Well>
           </Col>
         </Row>
-
       </div>
     );
   }

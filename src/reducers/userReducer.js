@@ -9,7 +9,8 @@ const userInitialState = {
   google: {},
   twitter: {}
 };
-const providers = ['local', 'facebook', 'google', 'twitter'];
+const providers = ['local', 'facebook', 'google'];
+let provider = null;
 
 const cleanData = (rawData) => {
   // return clean user data (without _id and __v)
@@ -84,17 +85,18 @@ const user = function(state=userInitialState, action){
 
     case 'SOCIAL_LOGIN_FULFILLED':
       Auth.authenticateUser(action.payload.data.token);
+      provider = providers
+        .filter(socialProvider => socialProvider in action.payload.data.user)[0]
       return {
         ...state,
         busy: false,
-        errMessage: action.payload.data.errMessage,
-        facebook: { ...action.payload.data.user.facebook },
-        userEmail: action.payload.data.user.facebook.email
+        [provider]: action.payload.data.user[provider],
+        userEmail: action.payload.data.user[provider].email
       };
 
     case 'SOCIAL_SIGNUP_FULFILLED':
       //TODO: handle other providers
-      const provider = ['facebook', 'google', 'twitter']
+      provider = providers
         .filter(socialProvider => socialProvider in action.payload.data.user)[0]
       return {
         ...state,
