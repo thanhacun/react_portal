@@ -3,7 +3,7 @@
 export default (store) => (next) => (action) => {
   // List of need sync data trigger
   const needTriggerActions = ['LOCAL_SIGNUP', 'LOGIN', 'LOGOUT', 'GET_USER_INFO',
-  'SOCIAL_LOGIN', 'SOCIAL_CONNECT', 'SOCIAL_UNLINK'];
+  'SOCIAL_LOGIN', 'SOCIAL_CONNECT', 'SOCIAL_UNLINK','SOCIAL_SIGNUP'];
   // make sure the action happen first
   let result = next(action);
 

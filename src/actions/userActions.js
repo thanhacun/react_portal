@@ -5,7 +5,7 @@ export function localSignup(email, password){
   return {
     type: 'LOCAL_SIGNUP',
     payload: axios.post('/api/users/signup', {email, password})
-  }
+  };
 }
 
 export function localLogin(email, password){
@@ -19,7 +19,7 @@ export function localConnect(email, password, social_email, social_provider){
   return {
     type: 'LOCAL_CONN',
     payload: axios.post('/api/users/info', { email, password, social_email, social_provider})
-  }
+  };
 }
 
 export function socialSignup(socialResponse){
@@ -31,11 +31,10 @@ export function socialSignup(socialResponse){
         strategy: `${socialResponse._provider}-token`
       }
     })
-  }
+  };
 }
 
 export function socialLogin(socialResponse){
-  console.log(socialResponse);
   return {
     type: 'SOCIAL_LOGIN',
     payload: axios.get('/api/users/social/login', {
