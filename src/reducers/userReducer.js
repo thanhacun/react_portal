@@ -66,13 +66,9 @@ const user = function(state=userInitialState, action){
     case 'LOGIN_FULFILLED':
     case 'SOCIAL_LOGIN_FULFILLED':
       Auth.authenticateUser(action.payload.data.token);
+      // eslint-disable-next-line
     case 'GET_USER_INFO_FULFILLED':
-      return {
-        ...state,
-        busy: false,
-        ...userData,
-        userEmail
-      };
+      return { ...state, busy: false, ...userData, userEmail };
 
     // ========================
     // SIGNUP FULFILLED ACTIONS
@@ -81,11 +77,7 @@ const user = function(state=userInitialState, action){
     case 'SOCIAL_SIGNUP_FULFILLED':
     case 'SOCIAL_CONNECT_FULFILLED':
     case 'SOCIAL_UNLINK_FULFILLED':
-      return {
-        ...state,
-        busy: false,
-        ...userData
-      };
+      return { ...state, busy: false, ...userData };
 
     // =============
     // OTHER ACTIONS

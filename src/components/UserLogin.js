@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
-//import Auth from '../utils/Auth';
 
 import SocialButton from './SocialButton';
 
@@ -31,6 +30,7 @@ class UserLogin extends Component {
   }
 
   loginFailure(response){
+    //TODO: handle login failure
     console.log(response);
   }
 

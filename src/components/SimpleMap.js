@@ -21,14 +21,7 @@ const MapWithAMarker = compose(
 );
 
 class SimpleMap extends Component {
-  componentWillMount(){
-    //TODO: is it good to made authorize here?
-    // if (Auth.isUserAuthenticated()) {
-    //
-    //   this.props.dispatch(getUserInfo(Auth.getToken()));
-    //   console.log(this.props);
-    // }
-  }
+
   render(){
     return (
       <div className="container">

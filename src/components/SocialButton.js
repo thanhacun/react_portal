@@ -12,12 +12,9 @@ const Button = ({ children, triggerLogin, ...props }) => (
 const RawSocialButton = SocialLogin(Button);
 
 // add appId to the component based on the value of provider
+// to keep social buttons simple (no need to repeat appId )
 class SocialButton extends Component {
   render(){
-    // const props = Object.assign({}, this.props, {
-    //   appId: config.appId[this.props.provider]
-    // });
-
     const newProps = {
       appId: config.appId[this.props.provider]
     }
