@@ -4,7 +4,7 @@
     "lat": 21.030849,
     "lng": 105.7841423,
     "showInfo": false,
-    "showStreet": false,
+    "showStreet": true,
     "address": {
       "street1": "15F, CMC Building, Duy Tan",
       "street2": "",

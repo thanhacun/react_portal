@@ -1,25 +1,41 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 
-//import { compose } from 'recompose';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow, StreetViewPanorama } from 'react-google-maps';
+import { compose, withProps } from 'recompose';
+import { withScriptjs, withGoogleMap,
+  GoogleMap, Marker, InfoWindow, StreetViewPanorama } from 'react-google-maps';
 import { markerMouseOver, markerClick, markerMouseOut } from '../actions/mapActions';
 
 import '../css/Map.css';
-const vnCenter = {lat: 16.0472484, lng: 108.1716866};
 
-const GoogleMapLoader = withScriptjs(withGoogleMap((props) =>
-  <GoogleMap defaultZoom={6} defaultCenter={vnCenter} zoom={props.zoom} center={props.center}>
-      {props.markers.map((marker, index) => (
-        <Marker
-          position={{lat:marker.lat, lng:marker.lng}}
-          key={index}
-          title={marker.title}
-          onMouseOver={() => props.onMarkerMouseOver(marker)}
-          onClick={() => props.onMarkerClick(marker, props.zoom)}
-          onMouseOut={() => props.onMarkerMouseOut(marker)}
-        >
-          {marker.showInfo && (
+const ProjectsMap = compose(
+  withProps((props) => ({
+    googleMapURL: `https://maps.googleapis.com/maps/api/js?v=3.exp&
+    libraries=geometry,drawing,places&key=AIzaSyD31s55OU_G5jv08zTlkykNVvCQPfMKQ3U`,
+    loadingElement: <div style={{ height: `100%` }} />,
+    containerElement: <div className="map_container container" style={{ height: props.containerElement }} />,
+    mapElement: <div className="map_element" style={{ height: props.mapHeight }} />,
+    vnCenter: {lat: 16.0472484, lng: 108.1716866}
+  })),
+  withScriptjs,
+  withGoogleMap
+)(props =>
+  <GoogleMap defaultZoom={6} defaultCenter={props.vnCenter} zoom={props.zoom} center={props.center}>
+    {props.markers.map((marker, index) => (
+      <Marker
+        position={{lat:marker.lat, lng:marker.lng}}
+        key={index}
+        title={marker.title}
+        onMouseOver={() => props.onMarkerMouseOver(marker)}
+        onClick={() => props.onMarkerClick(marker, props.zoom)}
+        onMouseOut={() => props.onMarkerMouseOut(marker)}
+      >
+        {marker.showInfo && (
+          <StreetViewPanorama
+            position={{ lat: marker.lat, lng: marker.lng}}
+            visible={ props.zoom > 10 }
+            pov={marker.pov ? {heading: marker.pov.heading, pitch:marker.pov.pitch} : {heading: 0, pitch: 0}}
+          >
             <InfoWindow>
               <div className="infowindow">
                 <h3>{marker.title}</h3>
@@ -34,49 +50,18 @@ const GoogleMapLoader = withScriptjs(withGoogleMap((props) =>
                    : ""}
               </div>
             </InfoWindow>
-          )}
-          {marker.showStreet && (
-            <StreetViewPanorama defaultPosition={{lat:marker.lat, lng:marker.lng}} visible>
+          </StreetViewPanorama>
+        )}
+        {/* {marker.showStreet && (
+          <StreetViewPanorama defaultPosition={{lat:marker.lat, lng:marker.lng}} visible>
 
-            </StreetViewPanorama>
-          )}
-        </Marker>
-      ))}
+          </StreetViewPanorama>
+        )} */}
+      </Marker>
+    ))}
   </GoogleMap>
-));
+)
 
-class ProjectsMap extends Component {
-  render(){
-    return (
-      <div className="container">
-        <h1 className="text-success">Projects Map of Vietnam</h1>
-        {!this.props.user.userEmail ?
-          <h2 className="text-alert">Please login!</h2>
-           :
-           <GoogleMapLoader
-             googleMapURL="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyD31s55OU_G5jv08zTlkykNVvCQPfMKQ3U"
-             loadingElement={<div style={{ height: `100%` }} />}
-             containerElement={
-               <div className="map_container" style={{ height: this.props.containerElement }} />
-             }
-             mapElement={
-               <div className="map_element" style={{ height: this.props.mapHeight }} />
-             }
-             zoom={this.props.zoom}
-             center={this.props.center}
-             markers={this.props.markers}
-             onMarkerMouseOver={this.props.onMarkerMouseOver}
-             onMarkerMouseOut={this.props.onMarkerMouseOut}
-             onMarkerClick={this.props.onMarkerClick}
-           />
-        }
-      </div>
-
-    );
-  }
-};
-
-//connect to store to return state
 const mapStateToProps = store => store.map;
 
 const mapDispatchToProps = dispatch => {

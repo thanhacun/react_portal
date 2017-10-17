@@ -57,8 +57,8 @@ const getPixelPositionOffset = (width, height) => ({
 
 const StreetViewPanoramaWithOverlayView = compose(
   withProps((props) => ({
-    googleMapURL: `https://maps.googleapis.com/maps/api/js?
-    v=3.exp&libraries=geometry,drawing,places&key=AIzaSyD31s55OU_G5jv08zTlkykNVvCQPfMKQ3U`,
+    googleMapURL: `https://maps.googleapis.com/maps/api/js?v=3.exp&
+    libraries=geometry,drawing,places&key=AIzaSyD31s55OU_G5jv08zTlkykNVvCQPfMKQ3U`,
     loadingElement: <div style={{ height: `100%`}} />,
     containerElement: <div className="container" style={{ height: `800px` }} />,
     mapElement: <div style={{ height: `100%` }} />,
@@ -73,8 +73,8 @@ const StreetViewPanoramaWithOverlayView = compose(
     defaultCenter={{lat: props.ho.lat, lng: props.ho.lng}}
     >
       <StreetViewPanorama
-        defaultPosition={{lat: props.ho.lat, lng: props.ho.lng}}
-        //position={{ lat: props.ho.lat, lng: props.ho.lng }}
+        //defaultPosition={{lat: props.ho.lat, lng: props.ho.lng}}
+        position={{ lat: props.ho.lat, lng: props.ho.lng }}
         visible
         pov={{ heading: props.ho.pov.heading, pitch: props.ho.pov.pitch}}
       >
@@ -105,5 +105,5 @@ const StreetViewPanoramaWithOverlayView = compose(
 const mapStateToProps = store => store.map;
 
 //NOTE: withRouter read react-router training
-export default withRouter(connect(mapStateToProps, null)(MapWithADirectionsRenderer));
-//export default withRouter(connect(mapStateToProps, null)(StreetViewPanoramaWithOverlayView));
+//export default withRouter(connect(mapStateToProps, null)(MapWithADirectionsRenderer));
+export default withRouter(connect(mapStateToProps, null)(StreetViewPanoramaWithOverlayView));
