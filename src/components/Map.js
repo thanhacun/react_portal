@@ -1,16 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { compose } from 'recompose';
-import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow} from 'react-google-maps';
+//import { compose } from 'recompose';
+import { withScriptjs, withGoogleMap, GoogleMap, Marker, InfoWindow, StreetViewPanorama } from 'react-google-maps';
 import { markerMouseOver, markerClick, markerMouseOut } from '../actions/mapActions';
 
 import '../css/Map.css';
 const vnCenter = {lat: 16.0472484, lng: 108.1716866};
 
-const GoogleMapLoader = compose(
-  withScriptjs,
-  withGoogleMap)(props => (
+const GoogleMapLoader = withScriptjs(withGoogleMap((props) =>
   <GoogleMap defaultZoom={6} defaultCenter={vnCenter} zoom={props.zoom} center={props.center}>
       {props.markers.map((marker, index) => (
         <Marker
@@ -23,8 +21,24 @@ const GoogleMapLoader = compose(
         >
           {marker.showInfo && (
             <InfoWindow>
-              <span className="infowindow">{marker.title}</span>
+              <div className="infowindow">
+                <h3>{marker.title}</h3>
+                {marker.address ?
+                  <address className="infowindow_address">
+                    {marker.address.street1} {marker.address.street2 ? (', ' + marker.address.street2 ): ''} <br />
+                    {marker.address.city}<br />
+                    {marker.address.country}<br />
+                    Tel.: {marker.address.tel}<br />
+                    <a href={marker.address.website}>Find more information</a>
+                  </address>
+                   : ""}
+              </div>
             </InfoWindow>
+          )}
+          {marker.showStreet && (
+            <StreetViewPanorama defaultPosition={{lat:marker.lat, lng:marker.lng}} visible>
+
+            </StreetViewPanorama>
           )}
         </Marker>
       ))}

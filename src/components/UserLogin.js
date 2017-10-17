@@ -78,7 +78,7 @@ class UserLogin extends Component {
         {/* Show warning */}
         {(this.props.error) ?
           <Alert bsStyle="danger">
-            <h4>Wanring!</h4>
+            <h4>Warning!</h4>
             <p>{this.props.error}</p>
           </Alert> : ""}
         <p>Need an account? <a href="" onClick={() => this.props.goTo("/signup")}>Signup</a></p>
