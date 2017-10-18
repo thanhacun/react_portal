@@ -11,3 +11,9 @@ export function markerMouseOver(markerIndex){
     payload: {markerIndex}
   }
 };
+
+export function onInfoWindowCloseClick(){
+  return {
+    type: "INFOWINDOW_CLOSE_CLICK"
+  }
+}

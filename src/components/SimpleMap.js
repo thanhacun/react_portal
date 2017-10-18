@@ -76,7 +76,6 @@ const StreetViewPanoramaWithOverlayView = compose(
         visible
         pov={{ heading: props.ho.pov.heading, pitch: props.ho.pov.pitch}}
       >
-      </StreetViewPanorama>
         {/* <OverlayView
           position={{ lat: props.markers[0].lat, lng: props.markers[0].lng }}
             mapPaneName={OverlayView.OVERLAY_LAYER}
@@ -86,17 +85,17 @@ const StreetViewPanoramaWithOverlayView = compose(
             KINDEN VIETNAM
           </div>
         </OverlayView> */}
-        <Marker
-          position={{lat: props.ho.lat , lng: props.ho.lng}}
-          //position={props.defaultCenter}
-          //title={props.markers[0].title}
-        >
-          <InfoWindow>
-            <div>
-              <h3>{props.ho.title}</h3>
-            </div>
-          </InfoWindow>
-        </Marker>
+      </StreetViewPanorama>
+      <Marker
+        position={{lat: props.ho.lat , lng: props.ho.lng}}
+        title={props.markers[0].title}
+      >
+        {/* <InfoWindow>
+          <div>
+            <h3>{props.ho.title}</h3>
+          </div>
+        </InfoWindow> */}
+      </Marker>
   </GoogleMap>
 )
 

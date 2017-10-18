@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { compose, withProps } from 'recompose';
 import { withScriptjs, withGoogleMap,
   GoogleMap, Marker, InfoWindow, StreetViewPanorama } from 'react-google-maps';
-import { markerMouseOver, markerClick } from '../actions/mapActions';
+import { markerMouseOver, markerClick, onInfoWindowCloseClick } from '../actions/mapActions';
 
 import '../css/Map.css';
 //TODO: use compose to handle some UI state:
@@ -24,39 +24,40 @@ const ProjectsMap = compose(
   <GoogleMap
     defaultZoom={6} defaultCenter={props.vnCenter}
     zoom={props.zoom} center={props.center}>
-    {props.showStreet.visible && (
-      <StreetViewPanorama
-      visible position={ props.center }
+    <StreetViewPanorama
+      visible={ props.showStreet.visible}
+      position={ props.center }
       pov={ props.showStreet.pov ? props.showStreet.pov : {heading: 0, pitch: 0} }
-      >
-      </StreetViewPanorama>
-    )}
-    {props.markers.map((marker, index) => (
-      <Marker
-        position={{lat:marker.lat, lng:marker.lng}}
-        key={index}
-        title={marker.title}
-        onMouseOver={() => props.onMarkerMouseOver(index)}
-        onClick={() => props.onMarkerClick(index, props.zoom)}
-      >
-        {(props.showInfoIndex === index) && (
-            <InfoWindow>
-              <div className="infowindow">
-                <h3>{marker.title}</h3>
-                {marker.address ?
-                  <address className="infowindow_address">
-                    {marker.address.street1} {marker.address.street2 ? (', ' + marker.address.street2 ): ''} <br />
-                    {marker.address.city}<br />
-                    {marker.address.country}<br />
-                    Tel.: {marker.address.tel}<br />
-                    <a href={marker.address.website}>Find more information</a>
-                  </address>
-                   : ""}
-              </div>
-            </InfoWindow>
-        )}
-      </Marker>
-    ))}
+    >
+    </StreetViewPanorama>
+      {props.markers.map((marker, index) => (
+        <Marker
+          position={{lat:marker.lat, lng:marker.lng}}
+          key={index}
+          title={marker.title}
+          onMouseOver={props.showInfoIndex === index ? null : () => props.onMarkerMouseOver(index)}
+          onClick={() => props.onMarkerClick(index, props.zoom)}
+        >
+          {(props.showInfoIndex === index) && (
+              <InfoWindow
+                onCloseClick={props.onInfoWindowCloseClick}
+              >
+                <div className="infowindow">
+                  <h3>{marker.title}</h3>
+                  {marker.address ?
+                    <address className="infowindow_address">
+                      {marker.address.street1} {marker.address.street2 ? (', ' + marker.address.street2 ): ''} <br />
+                      {marker.address.city}<br />
+                      {marker.address.country}<br />
+                      Tel.: {marker.address.tel}<br />
+                      <a href={marker.address.website}>Find more information</a>
+                    </address>
+                     : ""}
+                </div>
+              </InfoWindow>
+          )}
+        </Marker>
+      ))}
   </GoogleMap>
 )
 
@@ -66,6 +67,7 @@ const mapDispatchToProps = dispatch => {
   return {
     onMarkerMouseOver: (markerIndex) => dispatch(markerMouseOver(markerIndex)),
     onMarkerClick:(markerIndex, currentZoom) => dispatch(markerClick(markerIndex, currentZoom)),
+    onInfoWindowCloseClick: () => dispatch(onInfoWindowCloseClick()),
   };
 }
 

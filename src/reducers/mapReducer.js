@@ -21,7 +21,6 @@ export default function mapReducer(state=mapInitialState, action, userData) {
         return {
           ...state,
           zoom: 15,
-          //center: {lat: action.payload.targetMarker.lat, lng:action.payload.targetMarker.lng},
           center: { lat: state.markers[payload.markerIndex].lat,
                     lng: state.markers[payload.markerIndex].lng},
           showStreet: state.markers[payload.markerIndex].pov
@@ -41,6 +40,12 @@ export default function mapReducer(state=mapInitialState, action, userData) {
         ...state,
         showInfoIndex: payload.markerIndex,
       };
+
+    case "INFOWINDOW_CLOSE_CLICK":
+      return {
+        ...state,
+        showInfoIndex: -1
+      }
 
     default:
       return {...state, user: userData};
