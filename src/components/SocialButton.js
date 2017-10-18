@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import SocialLogin from 'react-social-login';
 import { compose, withProps } from 'recompose';
 

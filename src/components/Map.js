@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { compose, withProps } from 'recompose';
 import { withScriptjs, withGoogleMap,
   GoogleMap, Marker, InfoWindow, StreetViewPanorama } from 'react-google-maps';
-import { markerMouseOver, markerClick, markerMouseOut } from '../actions/mapActions';
+import { markerMouseOver, markerClick } from '../actions/mapActions';
 
 import '../css/Map.css';
+//TODO: use compose to handle some UI state:
 
 const ProjectsMap = compose(
   withProps((props) => ({
@@ -15,27 +16,30 @@ const ProjectsMap = compose(
     loadingElement: <div style={{ height: `100%` }} />,
     containerElement: <div className="map_container container" style={{ height: props.containerElement }} />,
     mapElement: <div className="map_element" style={{ height: props.mapHeight }} />,
-    vnCenter: {lat: 16.0472484, lng: 108.1716866}
+    vnCenter: {lat: 16.0472484, lng: 108.1716866},
   })),
   withScriptjs,
   withGoogleMap
 )(props =>
-  <GoogleMap defaultZoom={6} defaultCenter={props.vnCenter} zoom={props.zoom} center={props.center}>
+  <GoogleMap
+    defaultZoom={6} defaultCenter={props.vnCenter}
+    zoom={props.zoom} center={props.center}>
+    {props.showStreet.visible && (
+      <StreetViewPanorama
+      visible position={ props.center }
+      pov={ props.showStreet.pov ? props.showStreet.pov : {heading: 0, pitch: 0} }
+      >
+      </StreetViewPanorama>
+    )}
     {props.markers.map((marker, index) => (
       <Marker
         position={{lat:marker.lat, lng:marker.lng}}
         key={index}
         title={marker.title}
-        onMouseOver={() => props.onMarkerMouseOver(marker)}
-        onClick={() => props.onMarkerClick(marker, props.zoom)}
-        onMouseOut={() => props.onMarkerMouseOut(marker)}
+        onMouseOver={() => props.onMarkerMouseOver(index)}
+        onClick={() => props.onMarkerClick(index, props.zoom)}
       >
-        {marker.showInfo && (
-          <StreetViewPanorama
-            position={{ lat: marker.lat, lng: marker.lng}}
-            visible={ props.zoom > 10 }
-            pov={marker.pov ? {heading: marker.pov.heading, pitch:marker.pov.pitch} : {heading: 0, pitch: 0}}
-          >
+        {(props.showInfoIndex === index) && (
             <InfoWindow>
               <div className="infowindow">
                 <h3>{marker.title}</h3>
@@ -50,13 +54,7 @@ const ProjectsMap = compose(
                    : ""}
               </div>
             </InfoWindow>
-          </StreetViewPanorama>
         )}
-        {/* {marker.showStreet && (
-          <StreetViewPanorama defaultPosition={{lat:marker.lat, lng:marker.lng}} visible>
-
-          </StreetViewPanorama>
-        )} */}
       </Marker>
     ))}
   </GoogleMap>
@@ -66,9 +64,8 @@ const mapStateToProps = store => store.map;
 
 const mapDispatchToProps = dispatch => {
   return {
-    onMarkerMouseOver: (targetMarker) => dispatch(markerMouseOver(targetMarker)),
-    onMarkerClick:(targetMarker, currentZoom) => dispatch(markerClick(targetMarker, currentZoom)),
-    onMarkerMouseOut:(targetMarker) => dispatch(markerMouseOut(targetMarker)),
+    onMarkerMouseOver: (markerIndex) => dispatch(markerMouseOver(markerIndex)),
+    onMarkerClick:(markerIndex, currentZoom) => dispatch(markerClick(markerIndex, currentZoom)),
   };
 }
 

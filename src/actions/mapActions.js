@@ -1,20 +1,13 @@
-export function markerClick(targetMarker, currentZoom){
+export function markerClick(markerIndex, currentZoom){
   return {
     type: "MARKER_CLICK",
-    payload: {targetMarker, currentZoom}
+    payload: {markerIndex, currentZoom}
   }
 };
 
-export function markerMouseOver(targetMarker){
+export function markerMouseOver(markerIndex){
   return {
     type: "MARKER_MOUSE_OVER",
-    payload: targetMarker
+    payload: {markerIndex}
   }
 };
-
-export function markerMouseOut(targetMarker){
-  return {
-    type: "MARKER_MOUSE_OUT",
-    payload: targetMarker
-  }
-}

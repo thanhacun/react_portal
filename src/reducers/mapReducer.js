@@ -6,52 +6,41 @@ export const mapInitialState = {
   defaultCenter: {lat: 16.0472484, lng: 108.1716866},
   center: {lat: 16.0472484, lng: 108.1716866},
   markers,
-  zoom: 6
+  showInfoIndex: -1,
+  zoom: 6,
+  showStreet: {
+    visible: false,
+  },
 }
 
 export default function mapReducer(state=mapInitialState, action, userData) {
-  switch (action.type) {
+  const { type, payload } = action ;
+  switch (type) {
     case "MARKER_CLICK":
-      if (action.payload.currentZoom < 10) {
+      if (payload.currentZoom < 10) {
         return {
           ...state,
           zoom: 15,
-          center: {lat: action.payload.targetMarker.lat, lng:action.payload.targetMarker.lng}
+          //center: {lat: action.payload.targetMarker.lat, lng:action.payload.targetMarker.lng},
+          center: { lat: state.markers[payload.markerIndex].lat,
+                    lng: state.markers[payload.markerIndex].lng},
+          showStreet: state.markers[payload.markerIndex].pov
+            ? {visible: true, pov: {...state.markers[payload.markerIndex].pov}}
+            : {visible: false}
         };
       }
       return {
         ...state,
         zoom: 6,
-        center: state.defaultCenter
+        center: state.defaultCenter,
+        showStreet: {visible: false}
       }
 
     case "MARKER_MOUSE_OVER":
       return {
         ...state,
-        markers: state.markers.map((marker) => {
-          if (marker === action.payload) {
-            return {
-              ...marker,
-              showInfo: true
-            };
-          }
-          return marker;
-        })
+        showInfoIndex: payload.markerIndex,
       };
-
-    case "MARKER_MOUSE_OUT":
-    return {
-      ...state,
-      markers: state.markers.map((marker) => {
-        if (marker === action.payload) {
-          return {
-            ...marker,
-            showInfo: false
-          };
-        }
-        return marker;
-      })
-    }
 
     default:
       return {...state, user: userData};

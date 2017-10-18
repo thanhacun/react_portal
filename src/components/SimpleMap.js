@@ -1,16 +1,18 @@
 /*global google*/
-import React, { Component } from 'react';
+import React from 'react';
 import { compose, withProps, lifecycle } from 'recompose';
 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import { withScriptjs, withGoogleMap, GoogleMap,
-  DirectionsRenderer, StreetViewPanorama, OverlayView, Marker, InfoWindow } from 'react-google-maps';
+  DirectionsRenderer, StreetViewPanorama, Marker, InfoWindow } from 'react-google-maps';
 
 // ====================
 // DIRECTIONS =========
 // ====================
+
+// eslint-disable-next-line
 const MapWithADirectionsRenderer = compose(
   withProps({
     googleMapURL: "https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=geometry,drawing,places&key=AIzaSyD31s55OU_G5jv08zTlkykNVvCQPfMKQ3U",
@@ -50,10 +52,6 @@ const MapWithADirectionsRenderer = compose(
 // ====================
 // STREETVIEW =========
 // ====================
-const getPixelPositionOffset = (width, height) => ({
-  x: -(width / 2),
-  y: -(height / 2)
-})
 
 const StreetViewPanoramaWithOverlayView = compose(
   withProps((props) => ({
@@ -78,6 +76,7 @@ const StreetViewPanoramaWithOverlayView = compose(
         visible
         pov={{ heading: props.ho.pov.heading, pitch: props.ho.pov.pitch}}
       >
+      </StreetViewPanorama>
         {/* <OverlayView
           position={{ lat: props.markers[0].lat, lng: props.markers[0].lng }}
             mapPaneName={OverlayView.OVERLAY_LAYER}
@@ -98,7 +97,6 @@ const StreetViewPanoramaWithOverlayView = compose(
             </div>
           </InfoWindow>
         </Marker>
-      </StreetViewPanorama>
   </GoogleMap>
 )
 
