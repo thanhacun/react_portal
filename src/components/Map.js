@@ -17,6 +17,7 @@ const ProjectsMap = compose(
     containerElement: <div className="map_container container" style={{ height: props.containerElement }} />,
     mapElement: <div className="map_element" style={{ height: props.mapHeight }} />,
     vnCenter: {lat: 16.0472484, lng: 108.1716866},
+    targetMarker: props.markers[props.showInfoIndex]
   })),
   withScriptjs,
   withGoogleMap
@@ -36,6 +37,7 @@ const ProjectsMap = compose(
           key={index}
           title={marker.title}
           onMouseOver={props.showInfoIndex === index ? null : () => props.onMarkerMouseOver(index)}
+          //onMouseOver={() => props.onMarkerMouseOver(index)}
           onClick={() => props.onMarkerClick(index, props.zoom)}
         >
           {(props.showInfoIndex === index) && (
@@ -58,6 +60,25 @@ const ProjectsMap = compose(
           )}
         </Marker>
       ))}
+      {/* {(props.showInfoIndex !== -1) &&
+        <InfoWindow
+          position={{ lat: props.targetMarker.lat, lng: props.targetMarker.lng }}
+          onCloseClick={props.onInfoWindowCloseClick}
+        >
+          <div className="infowindow">
+            <h3>{props.targetMarker.title}</h3>
+            {props.targetMarker.address ?
+              <address className="infowindow_address">
+                {props.targetMarker.address.street1} {props.targetMarker.address.street2 ? (', ' + props.targetMarker.address.street2 ): ''} <br />
+                {props.targetMarker.address.city}<br />
+                {props.targetMarker.address.country}<br />
+                Tel.: {props.targetMarker.address.tel}<br />
+                <a href={props.targetMarker.address.website}>Find more information</a>
+              </address>
+               : ""}
+          </div>
+        </InfoWindow>
+      } */}
   </GoogleMap>
 )
 

@@ -3,8 +3,6 @@
     "title": "KINDEN VIETNAM - Hanoi Head Office",
     "lat": 21.030849,
     "lng": 105.7841423,
-    "showInfo": false,
-    "showStreet": false,
     "address": {
       "street1": "15F, CMC Building, Duy Tan",
       "street2": "",
@@ -22,8 +20,6 @@
     "title": "KINDEN VIETNAM - HCMC Branch Office",
     "lat": 10.7781051,
     "lng": 106.7048681,
-    "showInfo": false,
-    "showStreet": true,
     "address": {
       "street1": "3F, Saigon Riverside Office Center",
       "street2": "2A-4A Ton Duc Thang str., Dist. 1",
@@ -36,29 +32,21 @@
   {
     "title": "KINDEN VIETNAM - Hai Phong Office",
     "lat": 20.8575717,
-    "lng": 106.6867497,
-    "showInfo": false,
-    "showStreet": false
+    "lng": 106.6867497
   },
   {
     "title": "KINDEN VIETNAM - Thang Long Office",
     "lat": 21.1278336,
-    "lng": 105.7810428,
-    "showInfo": false,
-    "showStreet": false
+    "lng": 105.7810428
   },
   {
     "title": "KINDEN VIETNAM - Hung Yen Office",
     "lat": 20.9405843,
-    "lng": 106.07302,
-    "showInfo": false,
-    "showStreet": false
+    "lng": 106.07302
   },
   {
     "title": "KINDEN VIETNAM - Noi Bai Office",
     "lat": 21.2327247,
-    "lng": 105.8106964,
-    "showInfo": false,
-    "showStreet": false
+    "lng": 105.8106964
   }
 ]
