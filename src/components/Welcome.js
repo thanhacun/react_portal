@@ -6,8 +6,8 @@ class Welcome extends Component {
     return (
       <div className="container">
         <Jumbotron className="text-success">
-          <h2>React Apps</h2>
-          <p>combining React, Redux and Router to make React apps</p>
+          <h2>Fullstack Webapp - SPA - PWA</h2>
+          <p>Using: Nodejs, React, Redux, Webpack...</p>
         </Jumbotron>
       </div>
     )

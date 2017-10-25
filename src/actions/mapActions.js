@@ -16,4 +16,4 @@ export function onInfoWindowCloseClick(){
   return {
     type: "INFOWINDOW_CLOSE_CLICK"
   }
-}
+};
