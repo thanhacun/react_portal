@@ -4,14 +4,13 @@ import { compose, withProps, lifecycle } from 'recompose';
 
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-
 import { withScriptjs, withGoogleMap, GoogleMap,
+  // eslint-disable-next-line
   DirectionsRenderer, StreetViewPanorama, Marker, InfoWindow } from 'react-google-maps';
 
 // ====================
 // DIRECTIONS =========
 // ====================
-
 // eslint-disable-next-line
 const MapWithADirectionsRenderer = compose(
   withProps({
@@ -52,7 +51,7 @@ const MapWithADirectionsRenderer = compose(
 // ====================
 // STREETVIEW =========
 // ====================
-
+// eslint-disable-next-line
 const StreetViewPanoramaWithOverlayView = compose(
   withProps((props) => ({
     googleMapURL: `https://maps.googleapis.com/maps/api/js?v=3.exp&
@@ -102,5 +101,5 @@ const StreetViewPanoramaWithOverlayView = compose(
 const mapStateToProps = store => store.map;
 
 //NOTE: withRouter read react-router training
-//export default withRouter(connect(mapStateToProps, null)(MapWithADirectionsRenderer));
-export default withRouter(connect(mapStateToProps, null)(StreetViewPanoramaWithOverlayView));
+export default withRouter(connect(mapStateToProps, null)(MapWithADirectionsRenderer));
+//export default withRouter(connect(mapStateToProps, null)(StreetViewPanoramaWithOverlayView));

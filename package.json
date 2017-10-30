@@ -8,6 +8,7 @@
     "bootstrap": "^3.3.7",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
+    "immutable": "^3.8.2",
     "passport-facebook-token": "^3.3.0",
     "react": "^15.6.1",
     "react-bootstrap": "^0.31.3",
