@@ -4,6 +4,7 @@ import { routerReducer } from 'react-router-redux';
 import map from './mapReducer';
 import movies from './movieReducer';
 import user from './userReducer';
+import tcct from './tcctReducer'
 
 export default (state={}, action) => {
   // this is how combineReducers works
@@ -11,6 +12,7 @@ export default (state={}, action) => {
     user: user(state.user, action),
     map: map(state.map, action, state.user),
     movies: movies(state.movies, action),
-    router: routerReducer(state.router, action)
+    tcct: tcct(state.tcct, action, state.user),
+    router: routerReducer(state.router, action),
   };
 };

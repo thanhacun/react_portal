@@ -14,19 +14,8 @@ import Welcome from './components/Welcome';
 
 import store, { history } from './store';
 
-import appsList from './data/apps';
-import tcctLinks from './data/tcct';
-const appRoutes = appsList.map(function(app){
-  return (
-    <Route path={app.path} component={app.component} key={`app_${app.id}`} />
-  );
-});
-
-const tcctRoutes = tcctLinks.map((app) => {
-  return (
-    <Route path={app.path} component={app.component} key={`tcct_${app.id}`} />
-  );
-});
+import appRoutes from './data/apps';
+import tcctRoutes from './data/tcct';
 
 const app = document.getElementById('root');
 

@@ -1,4 +1,9 @@
 //TODO: put into a backend database
+import React from 'react';
+import { LinkContainer } from 'react-router-bootstrap';
+import { MenuItem } from 'react-bootstrap';
+import { Route } from 'react-router';
+
 import ProjectsMap from '../components/Map';
 import SimpleMap from '../components/SimpleMap';
 import NewMovies from '../components/NewMovies';
@@ -60,4 +65,23 @@ const appsList = [
   }
 ];
 
-export default appsList;
+const menuItems = appsList.map(function(item, key){
+  if (item.menu) {//Only create menu if having menu value
+    return (
+      <LinkContainer to={item.path} key={`link_${item.id}`}>
+        <MenuItem key={`key_${key}`} eventKey={`${key}.${item.id}`}>{item.des}</MenuItem>
+      </LinkContainer>
+    );
+} else {
+  return null;
+}
+});
+
+const appRoutes = appsList.map(function(app){
+  return (
+    <Route path={app.path} component={app.component} key={`app_${app.id}`} />
+  );
+});
+
+export default appRoutes;
+export { menuItems };

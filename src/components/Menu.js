@@ -2,36 +2,11 @@ import React, { Component } from 'react';
 import { LinkContainer } from 'react-router-bootstrap';
 import { connect } from 'react-redux';
 
-import { Navbar, Nav, NavItem, NavDropdown, MenuItem } from 'react-bootstrap';
+import { Navbar, Nav, NavItem, NavDropdown } from 'react-bootstrap';
 
-import appsList from '../data/apps';
-import tcctLinks from '../data/tcct';
+import { menuItems } from '../data/apps';
+import { tcctMenuItems } from '../data/tcct';
 import { getUserInfo } from '../actions/userActions';
-//import Auth from '../utils/Auth';
-
-const tcctMenuItems = tcctLinks.map((item, key) => {
-  if (item.menu) {
-    return (
-      <LinkContainer to={item.path} key={`link_${item.id}`}>
-        <MenuItem key={`key_${key}`} eventKey={`${key}.${item.id}`}>{item.des}</MenuItem>
-      </LinkContainer>
-    )
-  } else {
-    return null;
-  }
-});
-
-const menuItems = appsList.map(function(item, key){
-  if (item.menu) {//Only create menu if having menu value
-    return (
-      <LinkContainer to={item.path} key={`link_${item.id}`}>
-        <MenuItem key={`key_${key}`} eventKey={`${key}.${item.id}`}>{item.des}</MenuItem>
-      </LinkContainer>
-    );
-} else {
-  return null;
-}
-});
 
 class Menu extends Component {
   componentDidMount(){

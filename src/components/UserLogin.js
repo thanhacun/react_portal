@@ -4,7 +4,8 @@ import { push } from 'react-router-redux';
 
 import SocialButton from './SocialButton';
 
-import { Jumbotron, Form, FormGroup, ControlLabel, FormControl, Button, Alert } from 'react-bootstrap';
+import { Jumbotron, Form, FormGroup, ControlLabel, FormControl,
+  Button, Alert } from 'react-bootstrap';
 import { localLogin, getUserInfo, socialLogin } from '../actions/userActions';
 
 //TODO: understand clearly dummy and smart components
