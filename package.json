@@ -41,5 +41,5 @@
     "babel-eslint": "^8.0.0",
     "eslint-plugin-react": "^7.3.0"
   },
-  "proxy": "http://192.168.0.64:3036"
+  "proxy": "http://localhost:3036"
 }
