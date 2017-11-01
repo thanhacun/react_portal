@@ -11,6 +11,7 @@ import 'font-awesome/css/font-awesome.css'
 import registerServiceWorker from './registerServiceWorker';
 import Menu from './components/Menu';
 import Welcome from './components/Welcome';
+import RichTextEditor from './components/RichTextEditor';
 
 import store, { history } from './store';
 
@@ -25,6 +26,7 @@ ReactDOM.render(
     <div>
       <Menu />
       <Route exact path="/" component={Welcome} />
+      <Route path="/richtext" component={RichTextEditor} />
       {/* generate automatically app routes */}
       {appRoutes}
       {tcctRoutes}

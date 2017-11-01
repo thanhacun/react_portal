@@ -7,7 +7,7 @@ const tcct = (state=tcctInitialState, action, userData) => {
       return { ...state }
     case 'ADD_THO_FULFILLED':
       //console.log(payload.data)
-      return { ...state, tho: {} }
+      return { ...state, tho: [...state.tho, payload.data] }
     case 'ADD_THO_REJECTED':
       return { ...state }
     case 'SAVE_DRAFT_THO':
