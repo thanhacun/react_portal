@@ -1,12 +1,16 @@
+// TODO: using recompose to handle busy loading
+// TODO: integrated richtext editor
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { push } from 'react-router-redux';
 import { Form, FormGroup, ControlLabel, Jumbotron,
   FormControl, Button} from 'react-bootstrap';
+import RichTextEditor, { RawHTML } from '../RichTextEditor';
 
-import { addTho, saveDraftTho } from '../../actions/tcctActions';
+import { addTho, saveDraftTho, getTho } from '../../actions/tcctActions';
 
 //TODO: handleChange is not DRY, how to rewrite it?
+
 class ThoEdit extends Component {
   constructor(){
     super();
@@ -26,7 +30,7 @@ class ThoEdit extends Component {
     if (this.props.user.userEmail) {
       // submit new Tho
       this.props.addTho(this.state);
-      this.setState({index: '', title: '', content: '', footer: ''});
+      this.setState({index: '', title: '', content: '', footer: '', addedIndex: 0});
     } else {
       //TODO: DRY
       //save draft data
@@ -46,7 +50,10 @@ class ThoEdit extends Component {
         <Jumbotron className="text-center">
           <h2>TCCT - Kim Bồng Miêu</h2>
           <p>Nhập, sửa các bài thơ</p>
+          <code>Khi sửa chỉ nên sửa ở giao diện máy tính</code>
         </Jumbotron>
+        {/* recompose branch here to show busy loading or content */}
+        {/* recompose branch to show new form or edit form */}
         <h2>Nhập liệu</h2>
         <Form onSubmit={this.handleSubmit}>
           <FormGroup>
@@ -59,6 +66,8 @@ class ThoEdit extends Component {
             <FormControl type="text" value={this.state.title}
               onChange={(e) => this.handleChange(e, 'title')} required></FormControl>
           </FormGroup>
+
+          <RichTextEditor />
           <FormGroup>
             <ControlLabel>Nội dung</ControlLabel>
             <FormControl type="textarea" value={this.state.content}

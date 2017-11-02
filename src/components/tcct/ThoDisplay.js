@@ -10,7 +10,7 @@ import { Jumbotron, Button, Row, Col, ButtonToolbar } from 'react-bootstrap';
 class ThoDisplay extends Component {
   constructor(){
     super();
-    this.state = {random: 0};
+    this.state = {selectedIndex: 1, random: 0};
     this.getRandom = this.getRandom.bind(this);
   }
 
@@ -19,8 +19,9 @@ class ThoDisplay extends Component {
   }
 
   getRandom(){
-    this.setState({random:
-      Math.round(Math.random() * (this.props.tho.length - 1) )});
+    this.setState({
+      selectedIndex: 1,
+      random: Math.round(Math.random() * (this.props.tho.length - 1) )});
   }
 
   render(){
@@ -50,7 +51,7 @@ class ThoDisplay extends Component {
       const ThoIndex = this.props.tho.map((tho) => {
         return (
           <li key={`index_${tho.index}`}>
-            {`${tho.index}. ${tho.title} `}
+            <a onClick={() => this.setState({selectedIndex: tho.index})}>{`${tho.index}. ${tho.title} `}</a>
           </li>
         );
       });
@@ -64,7 +65,8 @@ class ThoDisplay extends Component {
           {/* Showing index in computer browser */}
           <Row>
             <Col xsHidden md={4}>{ThoIndex}</Col>
-            <Col xs={12} md={8} className='text-center'>{ThoList[this.state.random]}</Col>
+            <Col xs={12} md={8}
+              className='text-center'>{ThoList[this.state.selectedIndex - 1 || this.state.random]}</Col>
             <Col xs={12} md={8} mdOffset={4}>
               <ButtonToolbar className='text-center'>
                 <Button bsStyle='default'>Trước</Button>

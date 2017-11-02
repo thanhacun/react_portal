@@ -11,11 +11,12 @@ import { convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
 
-const RawHTML = (rawContent) => {
+const RawHTML = (label, rawContent) => {
   return (
     <FormGroup>
-       <ControlLabel>Raw html code</ControlLabel>
-       <FormControl type="textarea" value={draftToHtml(convertToRaw(rawContent))}  />
+       <ControlLabel>{label}</ControlLabel>
+       <FormControl type="textarea"
+         value={draftToHtml(convertToRaw(rawContent))} { ...this.props} />
     </FormGroup>
 
   );
@@ -28,21 +29,18 @@ const RawHTML = (rawContent) => {
 //     this.onEditorStateChange = (editorState) => this.setState({editorState});
 //   }
 //   render(){
-//     const rawContent = convertToRaw(this.state.editorState.getCurrentContent());
+//     const { editorState } = this.state;
 //     return (
 //       <div className="container">
 //         <h1>Rich text editor</h1>
 //         <Editor
-//           editorState={this.state.editorState}
+//           editorState={editorState}
 //           toolbarClassName="toolbarClassName"
 //           wrapperClassName="wrapperClassName"
 //           editorClassName="editorClassName"
 //           onEditorStateChange={this.onEditorStateChange}
 //         />
-//         <FormGroup>
-//           <ControlLabel>Raw html code</ControlLabel>
-//           <FormControl type="textarea" value={draftToHtml(rawContent)}  />
-//         </FormGroup>
+//         {RawHTML(editorState.getCurrentContent())}
 //       </div>
 //     )
 //   }
@@ -60,20 +58,19 @@ class RichTextEditor extends Component {
   render(){
     const { editorState } = this.state;
     return (
-      <div className="container">
-        <h1>Rich text editor</h1>
+      <div>
         <Editor
           ref="editor"
           editorState={editorState}
           onChange={this.onChange} />
 
-        {RawHTML(editorState.getCurrentContent())}
-
+        {RawHTML('Raw HTML code', editorState.getCurrentContent())}
       </div>
+
     )
   }
 }
 
 //const RichTextEditor = RichTextEditor01;
-//export { RichTextEditor01 };
+export { RawHTML };
 export default RichTextEditor;
