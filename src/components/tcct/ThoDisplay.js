@@ -39,7 +39,9 @@ class ThoDisplay extends Component {
         return (
           <div key={`list_${tho.index}`}>
              <h2>{tho.title}</h2>
-             {renderHTML(tho.content)}
+             <session>
+               {renderHTML(tho.content)}
+             </session>
              <p>{tho.footer}</p>
           </div>
         )
@@ -62,9 +64,9 @@ class ThoDisplay extends Component {
           {/* Showing index in computer browser */}
           <Row>
             <Col xsHidden md={4}>{ThoIndex}</Col>
-            <Col xs={12} md={8}>{ThoList[this.state.random]}</Col>
+            <Col xs={12} md={8} className='text-center'>{ThoList[this.state.random]}</Col>
             <Col xs={12} md={8} mdOffset={4}>
-              <ButtonToolbar>
+              <ButtonToolbar className='text-center'>
                 <Button bsStyle='default'>Trước</Button>
                 <Button bsStyle='success'>Mục lục</Button>
                 <Button bsStyle='primary' onClick={this.getRandom}>Random</Button>
