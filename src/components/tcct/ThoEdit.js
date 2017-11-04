@@ -21,15 +21,17 @@ class ThoEdit extends Component {
   }
 
   handleChange(e, type){
+    //console.log(e.target.value);
     this.setState({[type]: e.target.value});
   }
 
   handleSubmit(e){
     e.preventDefault();
     // Check authenticate
+    console.log(this.refs.content.state.rawHTML);
     if (this.props.user.userEmail) {
       // submit new Tho
-      this.props.addTho(this.state);
+      this.props.addTho({ ...this.state, content: this.refs.content.state.rawHTML});
       this.setState({index: '', title: '', content: '', footer: '', addedIndex: 0});
     } else {
       //TODO: DRY
@@ -66,12 +68,9 @@ class ThoEdit extends Component {
             <FormControl type="text" value={this.state.title}
               onChange={(e) => this.handleChange(e, 'title')} required></FormControl>
           </FormGroup>
-
-          <RichTextEditor />
           <FormGroup>
             <ControlLabel>Nội dung</ControlLabel>
-            <FormControl type="textarea" value={this.state.content}
-              onChange={(e) => this.handleChange(e, 'content')} required></FormControl>
+            <RichTextEditor rawLabel="Code HTML tự sinh" ref="content"/>
           </FormGroup>
           <FormGroup>
             <ControlLabel>Ghi chú</ControlLabel>

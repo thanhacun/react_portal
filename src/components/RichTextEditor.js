@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 // REACT-DRAFT-WYSIWYG ============
 //import { Editor } from 'react-draft-wysiwyg';
 //import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
@@ -11,15 +12,16 @@ import { convertToRaw } from 'draft-js';
 import draftToHtml from 'draftjs-to-html';
 import { ControlLabel, FormControl, FormGroup } from 'react-bootstrap';
 
-const RawHTML = (label, rawContent) => {
-  return (
-    <FormGroup>
-       <ControlLabel>{label}</ControlLabel>
-       <FormControl type="textarea"
-         value={draftToHtml(convertToRaw(rawContent))} { ...this.props} />
-    </FormGroup>
+class RawHTMLInput extends Component {
+  render(){
+    return (
+      <FormGroup>
+        <ControlLabel>{this.props.label || "Raw HTML"}</ControlLabel>
+        <FormControl type="textarea" { ...this.props } />
+      </FormGroup>
 
-  );
+    );
+  }
 }
 
 // class RichTextEditor extends Component {
@@ -49,22 +51,28 @@ const RawHTML = (label, rawContent) => {
 class RichTextEditor extends Component {
   constructor(props){
     super(props);
-    this.state = {editorState: createEditorState()}
-    this.onChange = (editorState) => {
-      this.setState({editorState});
-    }
+    this.state = {editorState: createEditorState(), rawHTML: ''};
+    this.onChange = this.onChange.bind(this);
+  }
+
+  onChange(editorState){
+    this.setState({
+      editorState,
+      rawHTML: draftToHtml(convertToRaw(editorState.getCurrentContent()))
+    });
   }
 
   render(){
-    const { editorState } = this.state;
+    const { editorState, rawHTML } = this.state;
     return (
       <div>
         <Editor
           ref="editor"
           editorState={editorState}
           onChange={this.onChange} />
+          <RawHTMLInput label={this.props.rawLabel} value={rawHTML}
+            onChange={this.props.rawOnChange} readOnly/>
 
-        {RawHTML('Raw HTML code', editorState.getCurrentContent())}
       </div>
 
     )
@@ -72,5 +80,5 @@ class RichTextEditor extends Component {
 }
 
 //const RichTextEditor = RichTextEditor01;
-export { RawHTML };
+//export { RawHTML };
 export default RichTextEditor;
