@@ -4,13 +4,14 @@ import { connect } from 'react-redux';
 
 import jumbo_01 from './jumbo_bg_01.png';
 import { getTho } from '../../actions/tcctActions';
+import ThoIndex from './ThoIndex';
 
 import { Jumbotron, Button, Row, Col, ButtonToolbar } from 'react-bootstrap';
 
 class ThoDisplay extends Component {
   constructor(){
     super();
-    this.state = {selectedIndex: 1, random: 0};
+    this.state = {selectedID: 0};
     this.getRandom = this.getRandom.bind(this);
   }
 
@@ -19,9 +20,16 @@ class ThoDisplay extends Component {
   }
 
   getRandom(){
-    this.setState({
-      selectedIndex: 1,
-      random: Math.round(Math.random() * (this.props.tho.length - 1) )});
+    //[X] TODO: avoid random same ID as current ID
+    while (true){
+      const randomID = Math.round(Math.random() * (this.props.tho.length - 1));
+      if (randomID !== this.state.selectedID){
+        this.setState({
+          selectedID: randomID}
+        );
+        break;
+      }
+    }
   }
 
   render(){
@@ -36,6 +44,8 @@ class ThoDisplay extends Component {
       )
     } else {
       // TODO: why thos[rndNumber].title is not available here
+      const thoLength = this.props.tho.length;
+      const { selectedID } = this.state;
       const ThoList = this.props.tho.map((tho) => {
         return (
           <div key={`list_${tho.index}`}>
@@ -48,14 +58,6 @@ class ThoDisplay extends Component {
         )
       });
 
-      const ThoIndex = this.props.tho.map((tho) => {
-        return (
-          <li key={`index_${tho.index}`}>
-            <a onClick={() => this.setState({selectedIndex: tho.index})}>{`${tho.index}. ${tho.title} `}</a>
-          </li>
-        );
-      });
-
       return (
         <div className="container">
           <Jumbotron style={jumboStyle} className="text-center">
@@ -64,20 +66,25 @@ class ThoDisplay extends Component {
           </Jumbotron>
           {/* Showing index in computer browser */}
           <Row>
-            <Col xsHidden md={4}>{ThoIndex}</Col>
-            <Col xs={12} md={8}
-              className='text-center'>{ThoList[this.state.selectedIndex - 1 || this.state.random]}</Col>
+            <Col xsHidden md={4}>
+              <ThoIndex tho={this.props.tho} selectedID={this.state.selectedID}
+                indexOnClick={(id) => {this.setState({selectedID: id})}}/>
+            </Col>
+            <Col xs={12} md={8} className='text-center'>
+              {ThoList[this.state.selectedID]}
+            </Col>
             <Col xs={12} md={8} mdOffset={4}>
-              <ButtonToolbar className='text-center'>
-                <Button bsStyle='default'>Trước</Button>
+              {/* Move to a component */}
+              <ButtonToolbar>
+                <Button bsStyle='default' disabled={(selectedID === 0) ? true : false}
+                  onClick={() => this.setState({selectedID: selectedID - 1})}>Trước</Button>
                 <Button bsStyle='success'>Mục lục</Button>
                 <Button bsStyle='primary' onClick={this.getRandom}>Random</Button>
-                <Button bsStyle='default'>Sau</Button>
+                <Button bsStyle='default' disabled={(selectedID === thoLength - 1) ? true : false}
+                  onClick={() => this.setState({selectedID: selectedID + 1})}>Sau</Button>
               </ButtonToolbar>
             </Col>
           </Row>
-          {/* Show a random tho */}
-          {/* Button group: Truoc, Index, Random, Sau */}
         </div>
       );
 

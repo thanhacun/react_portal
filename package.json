@@ -10,6 +10,7 @@
     "draftjs-to-html": "^0.7.6",
     "font-awesome": "^4.7.0",
     "history": "^4.7.2",
+    "html-to-draftjs": "^1.0.1",
     "immutable": "^3.8.2",
     "medium-draft": "^0.5.5",
     "passport-facebook-token": "^3.3.0",
