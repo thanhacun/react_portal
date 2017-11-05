@@ -1,9 +1,9 @@
 import axios from 'axios';
 
-export function addTho(newTho){
+export function modifyTho(modifiedTho, modifyAction){
   return {
     type: 'ADD_THO',
-    payload: axios.post('/api/tcct/tho', newTho)
+    payload: axios.post('/api/tcct/tho', {modifiedTho, modifyAction})
   }
 };
 
@@ -19,4 +19,4 @@ export function getTho(){
     type: 'GET_THO',
     payload: axios.get('/api/tcct/tho')
   }
-}
+};

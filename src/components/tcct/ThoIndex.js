@@ -8,14 +8,14 @@ class ThoIndex extends Component {
     this.handleOnClick = this.handleOnClick.bind(this);
   }
 
-  handleOnClick(id, index){
+  handleOnClick(id){
     this.props.indexOnClick(id);
   }
 
   render(){
     const IndexList = this.props.tho.map((tho, id) => {
       return (
-        <ListGroupItem key={`thoindex_${tho.index}`} active={(this.props.selectedID) === id ? true : false}
+        <ListGroupItem key={`thoindex_${id}`} active={(this.props.selectedID) === id ? true : false}
           onClick={() => this.handleOnClick(id)} >{`${tho.index}. ${tho.title}`}</ListGroupItem>
       );
     });
