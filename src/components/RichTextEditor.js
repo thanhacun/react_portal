@@ -54,7 +54,7 @@ class RichTextEditor extends Component {
           onEditorStateChange={this.onEditorStateChange}
         />
         <ControlLabel>{this.props.label}</ControlLabel>
-        <FormControl value={this.props.value} />
+        <FormControl value={this.props.value} readOnly/>
       </div>
     )
   }

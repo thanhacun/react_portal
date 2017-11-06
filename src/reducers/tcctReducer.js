@@ -7,18 +7,17 @@ const tcct = (state=tcctInitialState, action, userData) => {
       return { ...state }
     case 'ADD_THO_FULFILLED':
       const { modifiedTho, update } = payload.data;
-      if (update === 'deleted') {
+      if (update === 'deleted') { //delete a Tho
         return { ...state, tho: state.tho.filter(tho => {
           return tho.index !== modifiedTho.index;
-        })}
+        })};
       } else {
-        if (update === 'updated'){
-
+        if (update === 'updated'){ // update a Tho
           return { ...state, tho: state.tho.map(tho => {
             return (tho.index !== modifiedTho.index) ? tho : modifiedTho
-          })}
-        } else {
-          return { ...state, tho: [...state.tho, modifiedTho] }
+          })};
+        } else { // add a new Tho
+          return { ...state, tho: [...state.tho, modifiedTho] };
         }
       }
     case 'ADD_THO_REJECTED':

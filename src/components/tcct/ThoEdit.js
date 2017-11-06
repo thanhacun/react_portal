@@ -29,7 +29,6 @@ class ThoEdit extends Component {
   }
 
   handleChange(e, type){
-    //console.log(e.target.value);
     this.setState({[type]: e.target.value});
   }
 
@@ -68,7 +67,12 @@ class ThoEdit extends Component {
   }
 
   render(){
-    return (
+    if (this.props.tho.busy){
+      return(
+        <div>BUSY...</div>
+      )
+    } else {
+      return (
       <div className="container">
         <Jumbotron className="text-center">
           <h2>TCCT - Kim Bồng Miêu</h2>
@@ -86,7 +90,7 @@ class ThoEdit extends Component {
             <Form onSubmit={this.handleSubmit}>
               <FormGroup>
                 <ControlLabel>STT</ControlLabel>
-                <FormControl type="number" value={this.state.index}
+                <FormControl type="number" value={this.state.index} placeholder={this.props.tho.length + 1}
                   onChange={(e) => this.handleChange(e, 'index')} required></FormControl>
                 </FormGroup>
                 <FormGroup>
@@ -98,12 +102,12 @@ class ThoEdit extends Component {
                     <ControlLabel>Nội dung</ControlLabel>
                     <RichTextEditor label="Code HTML tự sinh"
                       updateRawHTML={(rawHTML) => this.handleUpdateRawHTML(rawHTML)}
-                      ref="content" value={this.state.content} syncHTMLtoEditor={this.state.syncHTMLtoEditor}/>
+                      value={this.state.content} syncHTMLtoEditor={this.state.syncHTMLtoEditor}/>
                   </FormGroup>
                   <FormGroup>
                     <ControlLabel>Ghi chú</ControlLabel>
                     <FormControl type="text" value={this.state.footer}
-                      onChange={(e) => this.handleChange(e, 'footer')} required></FormControl>
+                      onChange={(e) => this.handleChange(e, 'footer')} ></FormControl>
                     </FormGroup>
                     <ButtonToolbar>
                       <Button type="submit" bsStyle="warning">Thêm/Lưu</Button>
@@ -117,6 +121,7 @@ class ThoEdit extends Component {
         </Row>
       </div>
     )
+    }
   }
 }
 
