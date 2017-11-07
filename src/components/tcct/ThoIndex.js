@@ -1,64 +1,121 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 /*=== ALGOLIA InstantSearch ===*/
-import { InstantSearch, Hits, SearchBox, Highlight, RefinementList,
-Pagination, CurrentRefinements, ClearAll} from 'react-instantsearch/dom';
-import { connectSearchBox, connectHits } from 'react-instantsearch/connectors'
+import { InstantSearch, Hits, SearchBox, Highlight, RefinementList, Pagination,
+  CurrentRefinements, ClearAll} from 'react-instantsearch/dom';
+import { connectSearchBox, connectHits, connectHighlight } from 'react-instantsearch/connectors'
 //import 'react-instantsearch-theme-algolia/style.min.css'
 /*=== ALGOLIA InstantSearch ===*/
-import { ListGroup, ListGroupItem, ButtonGroup, Button } from 'react-bootstrap';
+import { ListGroup, ListGroupItem, ButtonGroup, Button, FormGroup, FormControl } from 'react-bootstrap';
 import FontAwesome from 'react-fontawesome';
 
 
 //[ ] TODO: handling pages
 //[X] TODO: sortting tho
 //[X] TODO: handling buttons group here
-class ThoSearch extends Component {
-  render(){
-    const CustomizedHits = ({hits}) => (
-      <ListGroup>
-        {hits.map(hit => (
-          <ListGroupItem key={hit.objectID} onClick={(e) => console.log(e.target)}>
-            {`${hit.index}. `}<Highlight attributeName="title" hit={hit} />
-          </ListGroupItem>
-        ))}
-      </ListGroup>
-    );
-    const ConnectedHits = connectHits(CustomizedHits);
-    const CustomizedSearchBox = ({currentRefinment, refine}) => (
-      <input type="text" value={currentRefinment}
-        onChange={(e) => refine(e.target.value)} />
-    );
-    const ConnectedSearchBox = connectSearchBox(CustomizedSearchBox);
-    const Tho = ({hit}) => (
-      <div style={{marginTop: '10px'}}>
-        <span className="hit-name">
-          {`${hit.index}. `}<Highlight attributeName="title" hit={hit} />
-        </span>
-      </div>
-    );
-    const Search = () => (
-      <div className="container">
-        {/* <CurrentRefinements/> */}
-        {/* <ClearAll /> */}
-        {/* <SearchBox /> */}
+//[X] TODO: handling instant search
+
+/*=== HOC wraps LocalIndex to use data from ALGOLIA ===*/
+const connectAlgolia = (LocalIndex) => {
+  return class ConnectAlgolia extends Component {
+    render(){
+      const { tho, ...otherProps} = this.props;
+      const ConnectedHighlight = connectHighlight(
+        ({ highlight, attributeName, hit, highlightProperty }) => {
+          const parseHit = highlight({
+            attributeName,
+            hit,
+            highlightProperty: '_highlightResult'
+          });
+          const highlightedHits = parseHit.map((part, index) => {
+            if (part.isHighlighted) return <mark key={`hl_${index}`}>{part.value}</mark>;
+            return part.value;
+          });
+          return <span>{highlightedHits}</span>;
+      });
+      const ConnectedHits = connectHits(({hits}) => {
+        const newHits = hits.map(hit => ({
+          ...hit,
+          // changing prop tho.title to return a Component, so LocalIndex can still
+          // use title in either plain text or Component
+          title: <ConnectedHighlight attributeName="title" hit={hit}/>
+        }));
+
+        return (
+          <LocalIndex tho={newHits} {...otherProps} />
+        )
+      });
+
+      const CustomizedSearchBox = ({currentRefinment, refine}) => (
+        <FormGroup>
+          <FormControl type="text" value={currentRefinment}
+            onChange={(e) => refine(e.target.value)} placeholder="Tìm theo tên bài hoặc nội dung"/>
+        </FormGroup>
+      );
+      const ConnectedSearchBox = connectSearchBox(CustomizedSearchBox);
+
+      return (
+        <InstantSearch
+          appId="4VFRX3XOJ8"
+          apiKey="b2e1639c8e855fd8e75aca9bf8b0f051"
+          indexName="dev_THO"
+        >
         <ConnectedSearchBox />
-        {/* <RefinementList attributeName="category" /> */}
-        {/* <Hits hitComponent={Tho}/> */}
         <ConnectedHits />
-        <Pagination />
-      </div>
-    )
-    return (
-      <InstantSearch
-        appId="4VFRX3XOJ8"
-        apiKey="b2e1639c8e855fd8e75aca9bf8b0f051"
-        indexName="dev_THO"
-      >
-      <Search />
-      </InstantSearch>
-    )
+
+        </InstantSearch>
+      )
+    }
   }
 }
+
+// class ThoSearch extends Component {
+//   render(){
+//     const CustomizedHits = ({hits}) => (
+//       <ListGroup>
+//         {hits.map(hit => (
+//           <ListGroupItem key={hit.objectID} onClick={(e) => console.log(e.target)}>
+//             {`${hit.index}. `}<Highlight attributeName="title" hit={hit} />
+//           </ListGroupItem>
+//         ))}
+//       </ListGroup>
+//     );
+//     const ConnectedHits = connectHits(CustomizedHits);
+//     const CustomizedSearchBox = ({currentRefinment, refine}) => (
+//       <input type="text" value={currentRefinment}
+//         onChange={(e) => refine(e.target.value)} />
+//     );
+//     const ConnectedSearchBox = connectSearchBox(CustomizedSearchBox);
+//     const Tho = ({hit}) => (
+//       <div style={{marginTop: '10px'}}>
+//         <span className="hit-name">
+//           {`${hit.index}. `}<Highlight attributeName="title" hit={hit} />
+//         </span>
+//       </div>
+//     );
+//     const Search = () => (
+//       <div className="container">
+//         {/* <CurrentRefinements/> */}
+//         {/* <ClearAll /> */}
+//         {/* <SearchBox /> */}
+//         <ConnectedSearchBox />
+//         {/* <RefinementList attributeName="category" /> */}
+//         {/* <Hits hitComponent={Tho}/> */}
+//         <ConnectedHits />
+//         <Pagination />
+//       </div>
+//     )
+//     return (
+//       <InstantSearch
+//         appId="4VFRX3XOJ8"
+//         apiKey="b2e1639c8e855fd8e75aca9bf8b0f051"
+//         indexName="dev_THO"
+//       >
+//       <Search />
+//       </InstantSearch>
+//     )
+//   }
+// }
 
 class ThoIndex extends Component {
   constructor(props){
@@ -98,7 +155,7 @@ class ThoIndex extends Component {
         <ListGroupItem key={`thoindex_${id}`}
           disabled={selectedID === id ? true : false}
           style={selectedID === id ? activeStyle: {}}
-          onClick={() => this.handleOnClick(id)} >{`${tho.index}. ${tho.title}`}
+          onClick={() => this.handleOnClick(id)} >{`${tho.index}. ` } {tho.title}
         </ListGroupItem>
       );
     });
@@ -118,10 +175,17 @@ class ThoIndex extends Component {
       <div>
         <ListGroup>{IndexList}</ListGroup>
         <Toolbar />
-        <ThoSearch />
       </div>
     );
   }
 }
 
-export default ThoIndex;
+ThoIndex.propTypes = {
+  tho: PropTypes.array,
+  selectedID: PropTypes.number,
+  getRandom: PropTypes.func,
+  handleNavigation: PropTypes.func,
+  indexOnClick: PropTypes.func
+}
+
+export default connectAlgolia(ThoIndex);
